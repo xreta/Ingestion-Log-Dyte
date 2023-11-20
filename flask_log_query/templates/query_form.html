@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Log Query Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            text-align: center;
+        }
+        .container {
+            margin-top: 50px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            margin-right: 10px;
+        }
+        input[type="text"],
+        input[type="datetime-local"] {
+            padding: 10px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+        input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        input[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Log Query Interface</h1>
+        <form action="/results" method="post">
+            <div class="form-group">
+                <label for="level">Log Level:</label>
+                <input type="text" id="level" name="level">
+            </div>
+            <div class="form-group">
+                <label for="message">Message:</label>
+                <input type="text" id="message" name="message">
+            </div>
+            <div class="form-group">
+                <label for="resourceId">Resource ID:</label>
+                <input type="text" id="resourceId" name="resourceId">
+            </div>
+            <div class="form-group">
+                <label for="timestamp">Timestamp:</label>
+                <input type="datetime-local" id="timestamp" name="timestamp">
+            </div>
+            <div class="form-group">
+                <label for="traceId">Trace ID:</label>
+                <input type="text" id="traceId" name="traceId">
+            </div>
+            <div class="form-group">
+                <label for="spanId">Span ID:</label>
+                <input type="text" id="spanId" name="spanId">
+            </div>
+            <div class="form-group">
+                <label for="commit">Commit:</label>
+                <input type="text" id="commit" name="commit">
+            </div>
+            <div class="form-group">
+                <label for="parentResourceId">Parent Resource ID:</label>
+                <input type="text" id="parentResourceId" name="parentResourceId">
+            </div>
+            <input type="submit" value="Submit">
+        </form>
+    </div>
+</body>
+</html>
