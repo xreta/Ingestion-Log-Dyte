@@ -28,30 +28,64 @@
 
 
 
-<!-- PROJECT LOGO -->
-<br />
-<div align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="images/logo.png" alt="Logo" width="80" height="80">
-  </a>
+<!-- PROJECT DETAIL -->
+## System Overview
+The log ingestion system is designed to efficiently handle large volumes of log data and provide a query interface for data retrieval. The system is composed of two main components: the Log Ingestor and the Query Interface. It employs a combination of Flask for the HTTP server, Elasticsearch for full-text searching, and PostgreSQL for structured data querying.
 
-  <h3 align="center">Best-README-Template</h3>
+## Log Ingestor
+**Technical Architecture**
+1. HTTP Server: Built using Flask, it listens on port 3000. This server is responsible for receiving log data in JSON format via HTTP POST requests.
 
-  <p align="center">
-    An awesome README template to jumpstart your projects!
-    <br />
-    <a href="https://github.com/othneildrew/Best-README-Template"><strong>Explore the docs »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/othneildrew/Best-README-Template">View Demo</a>
-    ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Report Bug</a>
-    ·
-    <a href="https://github.com/othneildrew/Best-README-Template/issues">Request Feature</a>
-  </p>
-</div>
+2. Data Validation: Upon receiving data, the system validates the JSON structure to match the predefined log schema, ensuring data integrity and consistency.
 
+3. Message Queue Integration: To handle high throughput and prevent data loss during peak loads, a message queue (such as RabbitMQ) is integrated. It temporarily stores incoming log data before it's persisted to the database, providing a buffering mechanism.
 
+4. Database Writing:
+
+Elasticsearch: Ideal for its full-text search capabilities, Elasticsearch is used to index log messages, allowing for efficient searching and analysis.
+PostgreSQL: It stores structured log data, providing capabilities for complex queries. The database schema is optimized with proper indexing (on fields like resourceId, timestamp, traceId, etc.) to speed up query operations.
+
+## Data Flow
+1. Log data is sent to the Flask server.
+2. The server validates and then forwards this data to a message queue.
+3. A separate process (or worker) consumes messages from the queue and writes them to Elasticsearch and PostgreSQL.
+
+## Query Interface
+**Design**
+1. User Interface: The system provides two interfaces:
+Web UI: Developed using Flask, it presents a form for users to input query parameters (like log level, message keywords, etc.).
+CLI: An optional Command Line Interface for advanced users.
+
+2. Query Processing:
+The Flask application processes input from the Web UI or CLI.
+Based on user input, it constructs and executes queries against Elasticsearch and PostgreSQL.
+Elasticsearch handles full-text search queries, while PostgreSQL is used for structured data queries.
+
+3. Result Presentation:
+Results from both databases are aggregated and formatted.
+The Web UI displays these results in a readable format, typically a table, to the user.
+
+**Backend Logic**
+Flask routes handle the form submission from the Web UI.
+Queries are dynamically constructed based on user input.
+Integration with Elasticsearch and PostgreSQL for data retrieval.
+Aggregated results are sent back to the UI for display.
+
+## Scalability and Performance
+1. Database Sharding: Both Elasticsearch and PostgreSQL are configured for sharding. Elasticsearch natively supports sharding, while PostgreSQL can be extended with tools like Citus for horizontal scaling.
+2. Load Balancing and Asynchronous Processing: The Flask server is optimized for handling high concurrency, possibly using asynchronous request processing. A load balancer could be employed for distributing incoming HTTP requests across multiple server instances.
+3. Performance Optimization:
+Elasticsearch queries are optimized to prevent deep pagination.
+PostgreSQL queries are indexed for performance, and query execution plans are regularly analyzed and optimized.
+4. Caching: Implementation of caching mechanisms (like Redis) for frequently accessed data to reduce database load.
+
+## Testing and Code Quality
+Load Testing: Tools like Apache JMeter or Locust are used to simulate high loads and identify performance bottlenecks.
+Code Standards: The codebase adheres to PEP 8 guidelines, ensuring readability and maintainability.
+Documentation: Comprehensive documentation is provided, including setup instructions, system design, features list, and known issues.
+
+## Conclusion
+The log ingestion system is a robust, scalable solution capable of handling vast amounts of log data efficiently. It offers a versatile query interface, catering to different user preferences, and ensures data integrity and quick access to log information. The system's architecture is designed for scalability and performance, making it suitable for environments with high data throughput.
 
 <!-- TABLE OF CONTENTS -->
 <details>
@@ -127,7 +161,8 @@ The log ingestor can be used to ingest log data over HTTP. The query interface a
 2. Set up Elasticsearch for full-text search
 3. Develop PostgreSQL schema for structured querying
 4. Add support for complex queries
-5. Implement user authentication for the query interface 
+5. Implement user authentication for the query interface
+
 
 <!-- CONTRIBUTING -->
 Any contributions you make are greatly appreciated. Please fork the repository and create a pull request. You can also simply open an issue with the tag "enhancement".
